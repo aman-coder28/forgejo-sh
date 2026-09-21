@@ -11,9 +11,9 @@ services:
       sizeGB: 10
     envVars:
       - key: GITEA__server__DOMAIN
-        value: forgejo.onrender.com # change to your *.onrender.com hostname or custom domain
+        value: forgejo-sh.onrender.com # change to your *.onrender.com hostname or custom domain
       - key: GITEA__server__ROOT_URL
-        value: https://forgejo.onrender.com/ # must match DOMAIN, trailing slash required
+        value: https://forgejo-sh.onrender.com # must match DOMAIN, trailing slash required
       - key: GITEA__server__HTTP_PORT
         value: 10000 # Render expects the app on $PORT (default 10000)
       - key: GITEA__server__DISABLE_SSH
