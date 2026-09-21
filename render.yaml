@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: forgejo
+    runtime: docker
+    # Change to your repo (or remove 'repo:' and deploy from dashboard)
+    plan: starter # required: persistent disks are not available on the free plan
+    healthCheckPath: /
+    disk:
+      name: forgejo-data
+      mountPath: /data # Forgejo image keeps repos/DB/config here
+      sizeGB: 10
+    envVars:
+      - key: GITEA__server__DOMAIN
+        value: forgejo.onrender.com # change to your *.onrender.com hostname or custom domain
+      - key: GITEA__server__ROOT_URL
+        value: https://forgejo.onrender.com/ # must match DOMAIN, trailing slash required
+      - key: GITEA__server__HTTP_PORT
+        value: 10000 # Render expects the app on $PORT (default 10000)
+      - key: GITEA__server__DISABLE_SSH
+        value: "true" # Render can't expose port 22 -> git over HTTPS only
+      - key: GITEA__database__DB_TYPE
+        value: sqlite3 # lives on the persistent disk; no external DB needed
+      - key: GITEA__service__DISABLE_REGISTRATION
+        value: "true" # set false only if you want open signups
+      - key: GITEA__service__REQUIRE_SIGNIN_VIEW
+        value: "false"
+      - key: GITEA__security__INSTALL_LOCK
+        value: "true" # skip the web installer; config comes from env
+      - key: GITEA__log__LEVEL
+        value: Info
