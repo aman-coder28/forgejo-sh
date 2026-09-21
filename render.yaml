@@ -7,19 +7,31 @@ services:
     healthCheckPath: /
     disk:
       name: forgejo-data
-      mountPath: /data # Forgejo image keeps repos/DB/config here
+      mountPath: /data # Forgejo image keeps repos + config here (SQLite DB no longer used)
       sizeGB: 10
     envVars:
       - key: GITEA__server__DOMAIN
         value: forgejo-sh.onrender.com # change to your *.onrender.com hostname or custom domain
       - key: GITEA__server__ROOT_URL
-        value: https://forgejo-sh.onrender.com # must match DOMAIN, trailing slash required
+        value: https://forgejo-sh.onrender.com/ # must match DOMAIN, trailing slash required
       - key: GITEA__server__HTTP_PORT
         value: 10000 # Render expects the app on $PORT (default 10000)
       - key: GITEA__server__DISABLE_SSH
         value: "true" # Render can't expose port 22 -> git over HTTPS only
       - key: GITEA__database__DB_TYPE
-        value: sqlite3 # lives on the persistent disk; no external DB needed
+        value: postgres
+      - key: GITEA__database__HOST
+        value: PASTE_INTERNAL_HOST_HERE:5432 # e.g. dpg-abc123-a.oregon-postgres.render.com:5432 (DB -> Connections -> Internal)
+      - key: GITEA__database__NAME
+        value: forgejo
+      - key: GITEA__database__USER
+        value: forgejo
+      - key: GITEA__database__PASSWD
+        fromDatabase:
+          name: forgejo-db
+          property: password
+      - key: GITEA__database__SSL_MODE
+        value: disable # internal hostname = private network, no TLS; use "require" with the external URL
       - key: GITEA__service__DISABLE_REGISTRATION
         value: "true" # set false only if you want open signups
       - key: GITEA__service__REQUIRE_SIGNIN_VIEW
@@ -28,3 +40,9 @@ services:
         value: "true" # skip the web installer; config comes from env
       - key: GITEA__log__LEVEL
         value: Info
+
+databases:
+  - name: forgejo-db
+    databaseName: forgejo
+    user: forgejo
+    plan: starter # free tier expires after 30 days; starter persists
