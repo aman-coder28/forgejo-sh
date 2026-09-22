@@ -7,7 +7,7 @@ services:
     healthCheckPath: /
     disk:
       name: forgejo-data
-      mountPath: /data # Forgejo image keeps repos + config here (SQLite DB no longer used)
+      mountPath: ./forgejo/data
       sizeGB: 10
     envVars:
       - key: GITEA__server__DOMAIN
@@ -21,7 +21,7 @@ services:
       - key: GITEA__database__DB_TYPE
         value: postgres
       - key: GITEA__database__HOST
-        value: PASTE_INTERNAL_HOST_HERE:5432 # e.g. dpg-abc123-a.oregon-postgres.render.com:5432 (DB -> Connections -> Internal)
+        value: dpg-daoqamrtqb8s73e6e3m0-a:5432
       - key: GITEA__database__NAME
         value: forgejo
       - key: GITEA__database__USER
@@ -40,15 +40,5 @@ services:
         value: "true" # skip the web installer; config comes from env
       - key: GITEA__log__LEVEL
         value: Info
-      - key: NAME
-        value: "emmanuel"
-      - key: PASSWORD
-        value: ""
-      - key: EMAIL
-        value: "zeamancoder@gmail.com"
-
-databases:
-  - name: forgejo-db
-    databaseName: forgejo
-    user: forgejo
-    plan: starter # free tier expires after 30 days; starter persists
+      - key: GITEA__security__INSTALL_LOCK
+        value: "true"
