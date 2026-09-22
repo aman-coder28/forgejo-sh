@@ -40,6 +40,12 @@ services:
         value: "true" # skip the web installer; config comes from env
       - key: GITEA__log__LEVEL
         value: Info
+      - key: NAME
+        value: "emmanuel"
+      - key: PASSWORD
+        value: ""
+      - key: EMAIL
+        value: "zeamancoder@gmail.com"
 
 databases:
   - name: forgejo-db
